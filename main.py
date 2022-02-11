@@ -4,8 +4,6 @@ import requests
 import telebot
 import os
 
-# botToken = "5285770077:AAFvGmK28FYcfVkm4Q6vMAgie8WHsHUt6II"
-# apiKey = "18372265-23dd084a52fad58a52dd60195"
 
 apiKey = os.getenv("api", "")
 botToken = os.getenv("botToken", "")
