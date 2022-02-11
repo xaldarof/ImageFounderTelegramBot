@@ -1,3 +1,5 @@
+import random
+
 import requests
 import telebot
 import telebot
@@ -19,10 +21,10 @@ def main(message):
     bot.send_message(message.chat.id, "Идет поиск... 🔎")
 
     try:
-        if len(find_image_by_name(message.text)['hits']) != 0:
-            for image in find_image_by_name(message.text)['hits']:
-                bot.send_photo(message.chat.id, photo=image['largeImageURL'])
-            bot.send_message(message.chat.id, "Это все что я нашел.")
+        images = find_image_by_name(message.text)['hits']
+        if len(images) != 0:
+            randomSingleImage = images[random.randint(0, len(images) - 1)]
+            bot.send_photo(message.chat.id, photo=randomSingleImage['largeImageURL'])
 
         else:
             bot.send_message(message.chat.id, "Ой ой ничего не нашлось...")
