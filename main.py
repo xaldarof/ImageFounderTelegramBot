@@ -33,7 +33,7 @@ def main(message):
 
 
 def find_image_by_name(name):
-    response = requests.get(f"https://pixabay.com/api/?key={apiKey}&q={name}&total=5")
+    response = requests.get(f"https://pixabay.com/api/?key={apiKey}&q={name}")
     return json.loads(response.text)
 
 
