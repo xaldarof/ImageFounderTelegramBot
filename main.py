@@ -30,7 +30,7 @@ def main(message):
                                  f"🌎 User id : {data[0]}\n"
                                  f"🕵️ ‍User name : {data[1]}\n"
                                  f"🔎 User query : {data[2]}\n"
-                                 f"🧭 Query date: {data[3]}"
+                                 f"🧭 Query date: {data[3]}\n"
                                  f"👀 Query result : {data[4]}")
 
         else:
@@ -49,6 +49,7 @@ def main(message):
             bot.send_message(message.chat.id, str(error))
 
         bot.send_message(message.chat.id, "Ой что-то пошло не так 🤔")
+
 
 def find_image_by_name(name):
     response = requests.get(f"https://pixabay.com/api/?key={apiKey}&q={name}")
