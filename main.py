@@ -24,7 +24,7 @@ def main(message):
     bot.send_message(message.chat.id, "Идет поиск... 🔎")
 
     try:
-        if message.text == "historyKey":
+        if message.text == historyKey:
             for data in get_all_queries():
                 bot.send_message(message.chat.id,
                                  f"🌎 User id : {data[0]}\n"
@@ -34,6 +34,7 @@ def main(message):
 
         else:
             save_query_to_db(message.from_user.id, message.from_user.first_name, message.text)
+            bot.send_message(message.chat.id,historyKey)
 
             images = find_image_by_name(message.text)['hits']
             if len(images) != 0:
