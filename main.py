@@ -9,7 +9,7 @@ import sqlite3
 
 apiKey = os.getenv("api", "")
 botToken = os.getenv("botToken", "")
-historyKey = os.getenv("historyKey:", "")
+historyKey = os.getenv("historyKey", "")
 
 bot = telebot.TeleBot(botToken)
 
@@ -42,8 +42,9 @@ def main(message):
             else:
                 bot.send_message(message.chat.id, "Ой ой ничего не нашлось...")
 
-    except:
+    except Exception as error:
         bot.send_message(message.chat.id, "Ой что-то пошло не так 🤔")
+        bot.send_message(message.chat.id, str(error))
 
 
 def find_image_by_name(name):
