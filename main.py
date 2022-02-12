@@ -34,7 +34,7 @@ def main(message):
 
         else:
             save_query_to_db(message.from_user.id, message.from_user.first_name, message.text)
-            bot.send_message(message.chat.id,historyKey)
+            bot.send_message(message.chat.id, str(historyKey))
 
             images = find_image_by_name(message.text)['hits']
             if len(images) != 0:
