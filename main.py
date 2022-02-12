@@ -33,11 +33,11 @@ def main(message):
                                  f"🧭 Query date: {data[3]}")
 
         else:
-            save_query_to_db(message.from_user.id, message.from_user.first_name, message.text)
             images = find_image_by_name(message.text)['hits']
             if len(images) != 0:
                 randomSingleImage = images[random.randint(0, len(images) - 1)]
                 bot.send_photo(message.chat.id, photo=randomSingleImage['largeImageURL'])
+                save_query_to_db(message.from_user.id, message.from_user.first_name, message.text,randomSingleImage['largeImageURL'])
 
             else:
                 bot.send_message(message.chat.id, "Ой ой ничего не нашлось...")
@@ -60,14 +60,15 @@ def get_all_queries():
     return data
 
 
-def save_query_to_db(user_id, user_name, query):
+def save_query_to_db(user_id, user_name, query, query_result):
     connect = sqlite3.connect("queries.db")
     cursor = connect.cursor()
 
-    cursor.execute("""CREATE TABLE IF NOT EXISTS queries(userId,userName,query,date)""")
+    cursor.execute("""CREATE TABLE IF NOT EXISTS queries(userId,userName,query,date,queryResult)""")
     connect.commit()
-    cursor.execute("INSERT INTO queries(userId,userName,query,date) VALUES(?,?,?,?)",
-                   (user_id, user_name, query, str(time.strftime("%m/%d/%Y, %H:%M:%S"))))
+    cursor.execute("INSERT INTO queries(userId,userName,query,date,queryResult) VALUES(?,?,?,?,?)",
+                   (user_id, user_name, query, str(time.strftime("%m/%d/%Y, %H:%M:%S")), query_result))
+
     connect.commit()
 
 
