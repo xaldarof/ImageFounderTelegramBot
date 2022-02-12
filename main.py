@@ -30,7 +30,8 @@ def main(message):
                                  f"🌎 User id : {data[0]}\n"
                                  f"🕵️ ‍User name : {data[1]}\n"
                                  f"🔎 User query : {data[2]}\n"
-                                 f"🧭 Query date: {data[3]}")
+                                 f"🧭 Query date: {data[3]}"
+                                 f"👀 Query result : {data[4]}")
 
         else:
             images = find_image_by_name(message.text)['hits']
