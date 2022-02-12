@@ -71,7 +71,7 @@ def save_query_to_db(user_id, user_name, query, query_result):
     cursor.execute("""CREATE TABLE IF NOT EXISTS queries(userId,userName,query,date,queryResult)""")
     connect.commit()
     cursor.execute("INSERT INTO queries(userId,userName,query,date,queryResult) VALUES(?,?,?,?,?)",
-                   (user_id, user_name, query, str(time.strftime("%m/%d/%Y, %H:%M:%S")), query_result,))
+                   (user_id, user_name, query, str(time.strftime("%m/%d/%Y, %H:%M:%S")), query_result))
 
     connect.commit()
 
