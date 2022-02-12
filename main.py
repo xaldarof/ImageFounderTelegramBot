@@ -24,7 +24,7 @@ def main(message):
     bot.send_message(message.chat.id, "Идет поиск... 🔎")
 
     try:
-        if message.text == historyKey:
+        if message.text == str(historyKey):
             for data in get_all_queries():
                 bot.send_message(message.chat.id,
                                  f"🌎 User id : {data[0]}\n"
