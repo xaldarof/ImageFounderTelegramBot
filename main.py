@@ -45,9 +45,10 @@ def main(message):
                 bot.send_message(message.chat.id, "Ой ой ничего не нашлось...")
 
     except Exception as error:
-        bot.send_message(message.chat.id, "Ой что-то пошло не так 🤔")
-        bot.send_message(message.chat.id, str(error))
+        if message.chat.id == 714707550:
+            bot.send_message(message.chat.id, str(error))
 
+        bot.send_message(message.chat.id, "Ой что-то пошло не так 🤔")
 
 def find_image_by_name(name):
     response = requests.get(f"https://pixabay.com/api/?key={apiKey}&q={name}")
