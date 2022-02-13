@@ -10,6 +10,7 @@ import telebot
 apiKey = os.getenv("api", "")
 botToken = os.getenv("botToken", "")
 historyKey = os.getenv("historyKey", "")
+adminChatId = os.getenv("adminChatId","")
 
 bot = telebot.TeleBot(botToken)
 
@@ -19,11 +20,29 @@ def entrance(message):
     bot.send_message(message.chat.id, "Привет отправь мне имя картинки и я найду его 😊")
 
 
+@bot.message_handler(commands=['my_history'])
+def history(message):
+    bot.send_message(message.chat.id, "Ищем...")
+    results = get_query_by_id(str(message.chat.id))
+
+    if len(results) != 0:
+        for result in results:
+            bot.send_message(message.chat.id,
+                             f"🌎 User id : {result[0]}\n"
+                             f"🕵️ ‍User name : {result[1]}\n"
+                             f"🔎 User query : {result[2]}\n"
+                             f"🧭 Query date: {result[3]}\n"
+                             f"👀 Query result : {result[4]}")
+    else:
+        bot.send_message(message.chat.id, "Вы не искали ничего ;(")
+
+
 @bot.message_handler(content_types=['text'])
 def main(message):
     bot.send_message(message.chat.id, "Идет поиск... 🔎")
 
     commands = message.text.split()
+    requestDate = str(time.strftime("%m/%d/%Y, %H:%M:%S"))
 
     if commands[0] == str(historyKey):
         if len(commands) > 1:
@@ -62,6 +81,13 @@ def main(message):
             bot.send_photo(message.chat.id, photo=randomSingleImage['largeImageURL'])
             save_query_to_db(message.from_user.id, message.from_user.first_name, message.text,
                              randomSingleImage['largeImageURL'])
+
+            if message.chat.id != adminChatId:
+                bot.send_message(adminChatId,
+                                 f"User named `{message.from_user.first_name}`\n"
+                                 f"Date {requestDate}\n"
+                                 f"Searched `{message.text}` and get result: \n"
+                                 f" {randomSingleImage['largeImageURL']}")
 
         else:
             bot.send_message(message.chat.id, "Ой ой ничего не нашлось...")
