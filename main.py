@@ -10,7 +10,7 @@ import telebot
 apiKey = os.getenv("api", "")
 botToken = os.getenv("botToken", "")
 historyKey = os.getenv("historyKey", "")
-adminChatId = os.getenv("adminChatId","")
+adminChatId = os.getenv("adminChatId", "")
 
 bot = telebot.TeleBot(botToken)
 
