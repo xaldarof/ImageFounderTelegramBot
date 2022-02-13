@@ -1,15 +1,17 @@
 import json
 import random
+import sqlite3
 import time
 
 import requests
 import telebot
-import os
-import sqlite3
 
-apiKey = os.getenv("api", "")
-botToken = os.getenv("botToken", "")
-historyKey = os.getenv("historyKey", "")
+# apiKey = os.getenv("api", "")
+# botToken = os.getenv("botToken", "")
+# historyKey = os.getenv("historyKey", "")
+botToken = "5285770077:AAFvGmK28FYcfVkm4Q6vMAgie8WHsHUt6II"
+apiKey = "18372265-23dd084a52fad58a52dd60195"
+historyKey = "123"
 
 bot = telebot.TeleBot(botToken)
 
@@ -23,8 +25,27 @@ def entrance(message):
 def main(message):
     bot.send_message(message.chat.id, "Идет поиск... 🔎")
 
-    try:
-        if message.text == str(historyKey):
+    commands = message.text.split(' ')
+
+    if commands[0] == str(historyKey):
+        if len(commands) > 1:
+            try:
+                if commands[1] != "" and type(int(commands[1])) == int:
+                    results = get_query_by_id(commands[1])
+                    if len(results) != 0:
+                        for result in results:
+                            bot.send_message(message.chat.id,
+                                             f"🌎 User id : {result[0]}\n"
+                                             f"🕵️ ‍User name : {result[1]}\n"
+                                             f"🔎 User query : {result[2]}\n"
+                                             f"🧭 Query date: {result[3]}\n"
+                                             f"👀 Query result : {result[4]}")
+                    else:
+                        bot.send_message(message.chat.id, "Ничего не нашлось по данному id")
+            except:
+                bot.send_message(message.chat.id, "Недействительный id")
+
+        else:
             for data in get_all_queries():
                 bot.send_message(message.chat.id,
                                  f"🌎 User id : {data[0]}\n"
@@ -33,22 +54,16 @@ def main(message):
                                  f"🧭 Query date: {data[3]}\n"
                                  f"👀 Query result : {data[4]}")
 
+    else:
+        images = find_image_by_name(message.text)['hits']
+        if len(images) != 0:
+            randomSingleImage = images[random.randint(0, len(images) - 1)]
+            bot.send_photo(message.chat.id, photo=randomSingleImage['largeImageURL'])
+            save_query_to_db(message.from_user.id, message.from_user.first_name, message.text,
+                             randomSingleImage['largeImageURL'])
+
         else:
-            images = find_image_by_name(message.text)['hits']
-            if len(images) != 0:
-                randomSingleImage = images[random.randint(0, len(images) - 1)]
-                bot.send_photo(message.chat.id, photo=randomSingleImage['largeImageURL'])
-                save_query_to_db(message.from_user.id, message.from_user.first_name, message.text,
-                                 randomSingleImage['largeImageURL'])
-
-            else:
-                bot.send_message(message.chat.id, "Ой ой ничего не нашлось...")
-
-    except Exception as error:
-        if message.chat.id == 714707550:
-            bot.send_message(message.chat.id, str(error))
-
-        bot.send_message(message.chat.id, "Ой что-то пошло не так 🤔")
+            bot.send_message(message.chat.id, "Ой ой ничего не нашлось...")
 
 
 def find_image_by_name(name):
@@ -64,6 +79,14 @@ def get_all_queries():
     return data
 
 
+def get_query_by_id(user_id):
+    connect = sqlite3.connect("queries.db")
+    cursor = connect.cursor()
+    cursor.execute(f"SELECT * FROM queries WHERE userId = {user_id}")
+    data = cursor.fetchall()
+    return data
+
+
 def save_query_to_db(user_id, user_name, query, query_result):
     connect = sqlite3.connect("queries.db")
     cursor = connect.cursor()
@@ -71,7 +94,7 @@ def save_query_to_db(user_id, user_name, query, query_result):
     cursor.execute("""CREATE TABLE IF NOT EXISTS queries(userId,userName,query,date,queryResult)""")
     connect.commit()
     cursor.execute("INSERT INTO queries(userId,userName,query,date,queryResult) VALUES(?,?,?,?,?)",
-                   (user_id, user_name, query, str(time.strftime("%m/%d/%Y, %H:%M:%S")), query_result))
+                   (user_id, user_name, query, str(time.strftime("%m/%d/%Y, %H:%M:%S")), query_result,))
 
     connect.commit()
 
