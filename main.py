@@ -44,14 +44,17 @@ def main(message):
                 bot.send_message(message.chat.id, "Недействительный id")
 
         else:
-            for data in get_all_queries():
-                bot.send_message(message.chat.id,
-                                 f"🌎 User id : {data[0]}\n"
-                                 f"🕵️ ‍User name : {data[1]}\n"
-                                 f"🔎 User query : {data[2]}\n"
-                                 f"🧭 Query date: {data[3]}\n"
-                                 f"👀 Query result : {data[4]}")
-
+            queries = get_all_queries()
+            if len(queries) != 0:
+                for data in queries:
+                    bot.send_message(message.chat.id,
+                                     f"🌎 User id : {data[0]}\n"
+                                     f"🕵️ ‍User name : {data[1]}\n"
+                                     f"🔎 User query : {data[2]}\n"
+                                     f"🧭 Query date: {data[3]}\n"
+                                     f"👀 Query result : {data[4]}")
+            else:
+                bot.send_message(message.chat.id, "База данных пуст")
     else:
         images = find_image_by_name(message.text)['hits']
         if len(images) != 0:
