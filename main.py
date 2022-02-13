@@ -82,7 +82,7 @@ def main(message):
             save_query_to_db(message.from_user.id, message.from_user.first_name, message.text,
                              randomSingleImage['largeImageURL'])
 
-            if message.chat.id != adminChatId:
+            if str(message.chat.id) != str(adminChatId):
                 bot.send_message(adminChatId,
                                  f"User named `{message.from_user.first_name}`\n"
                                  f"Date {requestDate}\n"
