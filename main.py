@@ -26,7 +26,7 @@ def main(message):
     commands = message.text.split()
 
     if commands[0] == str(historyKey):
-        if len(commands) > 0:
+        if len(commands) > 1:
             try:
                 if commands[1] != "" and type(int(commands[1])) == int:
                     results = get_query_by_id(commands[1])
