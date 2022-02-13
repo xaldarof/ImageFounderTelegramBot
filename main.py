@@ -1,4 +1,5 @@
 import json
+import os
 import random
 import sqlite3
 import time
@@ -6,12 +7,9 @@ import time
 import requests
 import telebot
 
-# apiKey = os.getenv("api", "")
-# botToken = os.getenv("botToken", "")
-# historyKey = os.getenv("historyKey", "")
-botToken = "5285770077:AAFvGmK28FYcfVkm4Q6vMAgie8WHsHUt6II"
-apiKey = "18372265-23dd084a52fad58a52dd60195"
-historyKey = "123"
+apiKey = os.getenv("api", "")
+botToken = os.getenv("botToken", "")
+historyKey = os.getenv("historyKey", "")
 
 bot = telebot.TeleBot(botToken)
 
