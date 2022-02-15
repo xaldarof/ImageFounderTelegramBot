@@ -118,7 +118,8 @@ def find_image(message, request_date):
 
 
 def find_image_by_name(name):
-    formatted = str(name).replace("/","")
+    formatted = str(name).replace("/", "")
+    print(formatted)
     response = requests.get(f"https://pixabay.com/api/?key={apiKey}&q={formatted}")
 
     return json.loads(response.text)
