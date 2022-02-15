@@ -7,8 +7,9 @@ import time
 import requests
 import telebot
 
-apiKey = os.getenv("api", "")
 botToken = os.getenv("botToken", "")
+apiKey = os.getenv("apiKey", "")
+
 historyKey = os.getenv("historyKey", "")
 adminChatId = os.getenv("adminChatId", "")
 
@@ -37,8 +38,7 @@ def history(message):
         bot.send_message(message.chat.id, "Вы не искали ничего ;(")
 
 
-@bot.message_handler(content_types=['text'])
-def main(message):
+def start_searching(message):
     bot.send_message(message.chat.id, "Идет поиск... 🔎")
 
     commands = message.text.split()
@@ -48,13 +48,27 @@ def main(message):
         if len(commands) > 1:
             try:
                 check_command(commands, message)
-            except:
+            except Exception as e:
+                print(e)
                 bot.send_message(message.chat.id, "Недействительный id")
 
         else:
             send_all_queries(message)
     else:
         find_image(message, requestDate)
+
+
+@bot.message_handler(content_types=['text'])
+def main(message):
+    if message.chat.type == 'supergroup':
+        if message.text.startswith('/'):
+            start_searching(message)
+        else:
+            bot.reply_to(message, "Если хотит искать рисунки напишите /имя рисунка\n"
+                                  "Например : /Dog")
+
+    else:
+        start_searching(message)
 
 
 def check_command(commands, message):
