@@ -9,7 +9,6 @@ import telebot
 
 botToken = os.getenv("botToken", "")
 apiKey = os.getenv("apiKey", "")
-
 historyKey = os.getenv("historyKey", "")
 adminChatId = os.getenv("adminChatId", "")
 
@@ -119,7 +118,9 @@ def find_image(message, request_date):
 
 
 def find_image_by_name(name):
-    response = requests.get(f"https://pixabay.com/api/?key={apiKey}&q={name}")
+    formatted = str(name).replace("/","")
+    response = requests.get(f"https://pixabay.com/api/?key={apiKey}&q={formatted}")
+
     return json.loads(response.text)
 
 
