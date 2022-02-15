@@ -47,48 +47,59 @@ def main(message):
     if commands[0] == str(historyKey):
         if len(commands) > 1:
             try:
-                if commands[1] != "" and type(int(commands[1])) == int:
-                    results = get_query_by_id(commands[1])
-                    if len(results) != 0:
-                        for result in results:
-                            bot.send_message(message.chat.id,
-                                             f"🌎 User id : {result[0]}\n"
-                                             f"🕵️ ‍User name : {result[1]}\n"
-                                             f"🔎 User query : {result[2]}\n"
-                                             f"🧭 Query date: {result[3]}\n"
-                                             f"👀 Query result : {result[4]}")
-                    else:
-                        bot.send_message(message.chat.id, "Ничего не нашлось по данному id")
+                check_command(commands, message)
             except:
                 bot.send_message(message.chat.id, "Недействительный id")
 
         else:
-            queries = get_all_queries()
-            if len(queries) != 0:
-                for data in queries:
-                    bot.send_message(message.chat.id,
-                                     f"🌎 User id : {data[0]}\n"
-                                     f"🕵️ ‍User name : {data[1]}\n"
-                                     f"🔎 User query : {data[2]}\n"
-                                     f"🧭 Query date: {data[3]}\n"
-                                     f"👀 Query result : {data[4]}")
-            else:
-                bot.send_message(message.chat.id, "База данных пуст")
+            send_all_queries(message)
     else:
-        images = find_image_by_name(message.text)['hits']
-        if len(images) != 0:
-            randomSingleImage = images[random.randint(0, len(images) - 1)]
-            bot.send_photo(message.chat.id, photo=randomSingleImage['largeImageURL'])
-            save_query_to_db(message.from_user.id, message.from_user.first_name, message.text,
-                             randomSingleImage['largeImageURL'])
+        find_image(message, requestDate)
 
-            if str(message.chat.id) != str(adminChatId):
-                bot.send_message(adminChatId,
-                                 f"User named `{message.from_user.first_name}`\n"
-                                 f"Date {requestDate}\n"
-                                 f"Searched `{message.text}` and get result: \n"
-                                 f" {randomSingleImage['largeImageURL']}")
 
+def check_command(commands, message):
+    if commands[1] != "" and type(int(commands[1])) == int:
+        results = get_query_by_id(commands[1])
+        if len(results) != 0:
+            for result in results:
+                bot.send_message(message.chat.id,
+                                 f"🌎 User id : {result[0]}\n"
+                                 f"🕵️ ‍User name : {result[1]}\n"
+                                 f"🔎 User query : {result[2]}\n"
+                                 f"🧭 Query date: {result[3]}\n"
+                                 f"👀 Query result : {result[4]}")
+        else:
+            bot.send_message(message.chat.id, "Ничего не нашлось по данному id")
+
+
+def send_all_queries(message):
+    queries = get_all_queries()
+    if len(queries) != 0:
+        for data in queries:
+            bot.send_message(message.chat.id,
+                             f"🌎 User id : {data[0]}\n"
+                             f"🕵️ ‍User name : {data[1]}\n"
+                             f"🔎 User query : {data[2]}\n"
+                             f"🧭 Query date: {data[3]}\n"
+                             f"👀 Query result : {data[4]}")
+    else:
+        bot.send_message(message.chat.id, "База данных пуст")
+
+
+def find_image(message, request_date):
+    images = find_image_by_name(message.text)['hits']
+    if len(images) != 0:
+        randomSingleImage = images[random.randint(0, len(images) - 1)]
+        bot.send_photo(message.chat.id, photo=randomSingleImage['largeImageURL'])
+        save_query_to_db(message.from_user.id, message.from_user.first_name, message.text,
+                         randomSingleImage['largeImageURL'])
+
+        if str(message.chat.id) != str(adminChatId):
+            bot.send_message(adminChatId,
+                             f"User named `{message.from_user.first_name}`\n"
+                             f"Date {request_date}\n"
+                             f"Searched `{message.text}` and get result: \n"
+                             f" {randomSingleImage['largeImageURL']}")
         else:
             bot.send_message(message.chat.id, "Ой ой ничего не нашлось...")
 
